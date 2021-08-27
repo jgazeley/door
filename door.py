@@ -1,86 +1,54 @@
-##### SETUP #####
-
 import RPi.GPIO as io
 import time
-io.setmode(io.BCM)
+
 io.setwarnings(False)
+io.setmode(io.BCM)
 
 io.setup(22, io.OUT) #5/6
 io.setup(27, io.OUT) #1/2
-io.setup(24, io.OUT) #9/0
-io.setup(23, io.OUT) #LOCK
+io.setup(23, io.OUT) #9/0
+io.setup(24, io.OUT) #LOCK
 io.output(22, 1)
 io.output(27, 1)
-io.output(24, 1)
 io.output(23, 1)
+io.output(24, 1)
 
-##### MENU #####
+def activate(pin):
+    io.output(pin, 0)
+    time.sleep(.1)
+    io.output(pin, 1)
 
-while True:
-    print("----------------")
-    print("Door Lock:")
-    print("(u) Unlock")
-    print("(l) Lock")
-    print("(x) Exit" )
-    print("----------------")
-    key = input('Enter command: ')
+def toggle(pin):
+    io.output(pin, not io.input(pin))
 
+def check(pin):
+    print(io.input(pin))
 
-##### UNLOCK (6-1-9-5-9-9-1-1) #####
+def press_SIX():
+    activate(22)
 
-    if key == 'u':
+def press_ONE():
+    activate(27)
 
-        io.output(22, 0)
-        time.sleep(.1)
-        io.output(22, 1)
-        time.sleep(.5)
+def press_NINE():
+    activate(23)
 
-        io.output(27, 0)
-        time.sleep(.1)
-        io.output(27, 1)
-        time.sleep(.5)
+def unlock(): # UNLOCK (6-1-9-5-9-9-1-1)
+    press_SIX()
+    time.sleep(.5)
+    press_ONE()
+    time.sleep(.5)
+    press_NINE()
+    time.sleep(.5)
+    press_SIX()
+    time.sleep(.5)
+    press_NINE()
+    time.sleep(.5)
+    press_NINE()
+    time.sleep(.5)
+    press_ONE()
+    time.sleep(.5)
+    press_ONE()
 
-        io.output(23, 0)
-        time.sleep(.1)
-        io.output(23, 1)
-        time.sleep(.5)
-
-        io.output(22, 0)
-        time.sleep(.1)
-        io.output(22, 1)
-        time.sleep(.5)
-
-        io.output(23, 0)
-        time.sleep(.1)
-        io.output(23, 1)
-        time.sleep(.5)
-
-        io.output(24, 0)
-        time.sleep(.1)
-        io.output(24, 1)
-        time.sleep(.5)
-
-        io.output(27, 0)
-        time.sleep(.1)
-        io.output(27, 1)
-        time.sleep(.5)
-
-        io.output(27, 0)
-        time.sleep(.1)
-        io.output(27, 1)
-        time.sleep(.5)
-
-##### LOCK #####
-
-    if key == 'l':
-
-        io.output(24, 0)
-        time.sleep(.1)
-        io.output(24, 1)
-
-##### EXIT #####
-
-    if key == 'x':
-        exit()
-    if key == 'exit':
-        exit()
+def lock():
+    activate(24)
